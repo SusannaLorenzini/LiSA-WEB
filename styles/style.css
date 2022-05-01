@@ -1,0 +1,48 @@
+/* ALL */
+*{
+	list-style: none;
+	text-decoration: none;
+}
+
+/* HEADER */
+.header-container{
+	background-color: #159957;
+    background-image: linear-gradient(120deg, #155799, #159957);
+}
+
+/* NAV */
+.nav-link {
+	color: darkgrey;
+	background-color: rgba(255,255,255,0.08);
+	transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+	opacity: 0.9;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	border: 1px solid darkgrey;
+	border-radius: 5px;
+}
+
+/* First paragraph: INTRODUCING LiSA Analysis */
+/*
+.introduction{color: #606c71; font-size: 1.1rem;}
+.introductionTitle{color: #159957}
+.introduction li::before {
+	content: "⦁";
+	max-height: 2px;
+	color: rgb(64,133,88);
+	display: inline-block;
+	width: 1em;
+	margin-left: -1em
+}
+*/
+
+.grey-paragraph{color: #606c71; font-size: 1.1rem;}
+.green{color: #159957;}
+.grey-paragraph li::before{
+	content: "⦁";
+	max-height: 2px;
+	color: rgb(64,133,88);
+	display: inline-block;
+	width: 1em;
+	margin-left: -1em
+}
+.weight-normal{font-weight: normal;}
