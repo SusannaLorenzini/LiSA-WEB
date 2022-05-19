@@ -1,40 +1,21 @@
+/**
+ * LiSA Analysis - style.css
+ * Styles for LiSA Analysis
+ *
+ * @author <a href="mailto:lorenzini.susanna@gmail.com">Susanna Lorenzini</a>
+ */
+
 /* ALL */
 *{
 	list-style: none;
 	text-decoration: none;
 }
+a{color:#155799;}
+.inline{display: inline;}
+@media (max-width: 400px){.card-body{font-size:0.8rem;}}
 
-/* HEADER */
-.header-container{
-	background-color: #159957;
-    background-image: linear-gradient(120deg, #155799, #159957);
-}
 
-/* NAV */
-.nav-link {
-	color: darkgrey;
-	background-color: rgba(255,255,255,0.08);
-	transition: color 0.2s, background-color 0.2s, border-color 0.2s;
-	opacity: 0.9;
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	border: 1px solid darkgrey;
-	border-radius: 5px;
-}
-
-/* First paragraph: INTRODUCING LiSA Analysis */
-/*
-.introduction{color: #606c71; font-size: 1.1rem;}
-.introductionTitle{color: #159957}
-.introduction li::before {
-	content: "⦁";
-	max-height: 2px;
-	color: rgb(64,133,88);
-	display: inline-block;
-	width: 1em;
-	margin-left: -1em
-}
-*/
-
+/* CUSTOM */
 .grey-paragraph{color: #606c71; font-size: 1.1rem;}
 .green{color: #159957;}
 .grey-paragraph li::before{
@@ -46,3 +27,97 @@
 	margin-left: -1em
 }
 .weight-normal{font-weight: normal;}
+.small-text{font-size: 1.1rem;}
+.x-small-text{font-size:1rem;}
+
+/* HEADER */
+.header-container{
+	background-color: #159957;
+    background-image: linear-gradient(120deg, #155799, #159957);
+}
+
+/* NAV */
+.nav-link-custom {
+	color: rgba(255,255,255,0.5);
+	background-color: rgba(255,255,255,0.08);
+	transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+	opacity: 0.9;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	border: 1px solid rgba(255,255,255,0.5);
+	border-radius: 5px;
+}
+.nav a:hover{color: rgba(255,255,255,0.9);background-color:rgba(255,255,255,0.2);}
+
+/* SOURCE CODE TAB */
+/* source code card */
+.highlight{background-color:rgba(235, 160, 0, 0.35); width: 100%;}
+#sourcecode-card-body {display: grid; padding-top: .3em; padding-left: 0 !important;}
+#container-sourcerow, #container-plain-sourceraw {overflow: scroll;}
+.sourcerow, .plain-sourcerow {width: max-content;}
+.sourcerow > pre, .plain-sourcerow > pre {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	overflow-y: hidden !important;
+	margin-top: 0 !important;
+}
+#sourcecode-btn-select-all {
+	float: right;
+	color: #bbb;
+	font-size: .8em;
+	padding: 0 0.5em;
+	background: rgba(224, 224, 224, 0.2);
+	box-shadow: 0 2px 0 0 rgb(0 0 0 / 20%);
+	border-radius: 0.5em;
+	line-height: normal;
+	overflow: visible;
+	border: 0;
+}
+#sourcecode-btn-container {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+/* warnings card */
+.card-warnings {padding: 0;}
+.table>tbody>tr{cursor: pointer;}
+.table>tbody>tr>th{font-weight: normal;}
+.table>tbody>tr>td{font-weight: normal;}
+
+/* DEBUG, ANALYSIS, INPUT CFGs, TYPE INFERENCE TABS */
+#debug>.debug-command{
+	white-space: pre-wrap;       /* Since CSS 2.1 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+/* ANALYSIS, INPUT CFGs TYPE INFERENCE TABS */
+#analysis-files-dumped, #inputcfgs-files-dumped, #typeinference-files-dumped{font-size: 1em;}
+.analysis-file-dumped, .inputcfgs-file-dumped, .typeinference-file-dumped{word-break: break-all;}
+
+
+
+/* SCROLL TO TOP ICON */
+.scroll-to-top{
+	visibility: hidden;
+	float: right;
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
+	opacity: 60%;
+	text-decoration: none;
+}
+.roundedFixedBtn{
+	height: 3rem;
+	width: 3rem;
+	font-weight: bold;
+	border-radius: 50%;
+	background-color: lightgrey;
+	color: white;
+	text-align: center;
+	cursor: pointer;
+	font-size: 2.5rem;
+}
