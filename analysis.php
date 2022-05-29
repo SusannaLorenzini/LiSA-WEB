@@ -140,7 +140,8 @@ if($status == OK)
     <!-- Javascript events -->
     <script type="text/javascript" src="events.js" defer></script>
 
-    <title>LiSA, Static Analysis with LiSA</title>
+    <title>LiSA Analysis | Static Analysis with LiSA</title>
+    <link rel="icon" href="media/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -176,11 +177,12 @@ if($status == OK)
 	if($status == OK)
 	{
         // Target directory to save analysis output
-        $target_dir_output = $target_dir. $valueDomain_from_POST . "/";
+        // NB: timezone used by date function is UTC (Coordinated Universal Time)
+        $target_dir_output = $target_dir. date("Y-m-d_H.i.s") . "/";
 
-        // Remove session directory and its contents, if it already exists
-        $command_clean_workingdir = "rm -r $target_dir_output 2>&1";
-        $output_clean_workingdir = shell_exec($command_clean_workingdir);
+        // Remove all directories older than 1 hour (modified more than 1 hour ago) //NB: replace "-mmin +n" with "-mtime +n" to delete files older than n days
+        $command_remove_old_directories = "find analysis -mmin +60 -maxdepth 1 -mindepth 1 | xargs rm -r 2>&1";
+        $output_remove_old_directories = shell_exec($command_remove_old_directories);
 
         // Launch LiSA analysis with parameters chosen by the user
         $command_lisacli = "java -jar " . LISACLI_JAR . " -source \"$target_file\" -workdir $target_dir_output $flag_dumpcfgs_argument $flag_jsonoutput_argument $flag_typeinference_argument $heapDomain_argument $valueDomain_argument $typeDomain_argument $interprocedural_argument $callGraph_argument $openCallPolicy_argument "./* $fixpointWorkingSet_argument */"$flag_nicheck_argument $wideningThreshold_argument 2>&1";
@@ -322,16 +324,12 @@ if($status == OK)
                 <div class='container'>
                     <div class='row'>";
 
+                        // an error occurred: exit status of LiSA isn't 0 OR only report.json is generated (but no analysis file)
                         if ($output_lisacli_exitStatus != 0){
-                            echo "
-                            <p>Something went wrong: LiSA couldn't analyze the program. Click <span onclick='showHideElement()' style='color:#155799; cursor: pointer;'>here</span> to learn more.</p>
-                            <p id='exception_error_message' style='display: none;'>Prova</p>
-                            ";
-                        } else if ((is_dir($target_dir. $valueDomain_from_POST)) && file_exists($target_dir_output . "report.json") && (!empty($files_dumped_multidim)) && (empty($files_dumped_multidim['analysis']))){
-                            echo "<p>No files generated. Please make sure that your IMP program is correct: see documentation <a href='https://unive-ssv.github.io/lisa/imp/' title='IMP documentation' style='text-decoration: none;'>here</a>.</p>";
+                            echo "<p class='mt-1'>Something went wrong: LiSA couldn't analyze the program.<br>Please make sure that your <a href='https://unive-ssv.github.io/lisa/imp/' title='IMP documentation' style='text-decoration: none;'>IMP</a> program is correct and <a href='index.php' title='LiSA Analysis' style='text-decoration: none;'>try again</a>, if the error persists contact the sysadmin.</br>";
+                        } else if ((is_dir($target_dir_output)) && file_exists($target_dir_output . "report.json") && (!empty($files_dumped_multidim)) && (empty($files_dumped_multidim['analysis']))){
+                            echo "<p class='mt-1'>No files generated. Please make sure that your IMP program is correct: see documentation <a href='https://unive-ssv.github.io/lisa/imp/' title='IMP documentation' style='text-decoration: none;'>here</a>.</p>";
                         }
-
-
 
                         /* Source Code Card */
                         // Source Code Card has maximum width if report.json is not dumped (in this case, Warnings Card is not shown)
@@ -524,39 +522,51 @@ if($status == OK)
             
             <!-- DEBUG tab content: 4 DEVELOPERS ONLY ===> to remove -->
             <div class='tab-pane fade pt-4' id='debug' role='tabpanel' aria-labelledby='debug-tab'>
-                <p><b>DEBUG command executed: </b><br></p>
-                <strong>Cleaning working directory:</strong>
-                <pre class='debug-command' style='color:darkblue;'>#$command_clean_workingdir</pre>
-                <pre class='debug-command'>$output_clean_workingdir</pre>
+                <h3 class='green weight-normal'>DEBUG TAB</h3>
+                
+                <br><hr><br>
+                
+                <p class='green'><strong>1) COMMANDS EXECUTED with PHP</strong></p><br>
+                <strong>1.1) Deleting user session directories older than 1 hour [modified more than 1 hour ago] (with PHP shell_exec command)</strong>
+                <p class='text-muted'>User session directories contain results of the analysis, such as report.json and required CFGs files</p>
+                <pre class='debug-command'>\$command_remove_old_directories: <span style='color:darkblue;'>$command_remove_old_directories</span></pre>
+                <pre class='debug-command'>$output_remove_old_directories</pre>
                 <br>
-                <strong>Launching LiSA:</strong>
-                <pre class='debug-command' style='color:darkblue;'>#$command_lisacli</pre>
-                <pre class='debug-command'><strong>[Output:]</strong>
+                <strong>1.2) Launching LiSA (with PHP exec command)</strong>
+                <p class='text-muted'>Output shows:<br> - the usage of lisa-cli, that is how to launch LiSA from command line;<br> - values of parameters set from the user and sent to LiSA;<br> - values really used (retrieved by LiSAConfiguration object) for debugging purpose;<br> - recap of LiSAConfiguration.<br>After outputs also exit status of LiSA retrieved by PHP exec command is shown (0 = successfull termination, otherwise some kind of error occurred).</p>
+                <pre class='debug-command'>\$command_lisacli: <span style='color:darkblue;'>$command_lisacli</span></pre>
+                <br><pre class='debug-command'><strong>Output:</strong>
                 ";
                     echo "\n";
                     foreach ($output_lisacli as $line){
                         echo htmlspecialchars($line, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401) . "\n";
                     }
-                    echo "<br>[exit-status]: " .$output_lisacli_exitStatus;
+                    echo "<br><strong>exit-status:</strong> " .$output_lisacli_exitStatus;
                 echo "
                 </pre>
-                <br><br><hr><br><br>
-               
                 
-                <b>DEBUG generating warnings array from report.json: </b>
-                <p>[after sorting array for warning line number]<br></p>";
+                <br><hr><br>
+                
+                <p> <span class='green'><strong>2) Files dumped by LiSA in working directory</strong></span><br><span class='text-muted'>Shows all files effectively dumped into current user session directory</span></p>
+                <pre class='debug-command'>\$command_workdir_ls: <span style='color:darkblue;'>$command_workdir_ls</span></pre>
+                <br><strong>Output:</strong><br>
+                <pre>$output_workdir_ls</pre>
+                
+                <br><hr><br>
+               
+               <p class='green'><strong>3) PHP structures used to handle LiSA outputs</strong></p><br>
+                
+                <strong>3.1) Multidimensional array json_warnings_info to list warnings contained in report.json</strong>
+                <p class='text-muted'>Every warning has an indication for corresponding row, column and message. Array elements were sort by warning line number.<br>This array is useful for Warnings Card where warnings are shown.</p>";
 
                 echo (($jsonoutput && file_exists($target_dir_output . 'report.json') && !empty($json_data['warnings'])) ? "<pre>" . print_r($json_warnings_info, true) . "</pre>" : "<p>No warnings or no report.json found</p>");
 
                 echo"
-                <br><br><hr><br><br>
-                
-                <p><b>DEBUG command executed: <br>$command_workdir_ls</b></p>
-                <p>Files generated in " . $target_dir_output . ": </p>
-                <pre>$output_workdir_ls</pre>
+
                 <br><br><br>
-                <b>MULTIDIM array for files dumped</b><br>
-                files in session directory: <br>
+                
+                <strong>3.2) Multidimentional array files_dumped_multidim to handle files in user session directory</strong><br>
+                <p class='text-muted'>Files dumped are divided into sub-arrays based on the naming convention of LiSA, that is:<br> - files containing analysis results start with \"analysis\";<br> - report.json starts with \"report\";<br> - files containing type inference results start with \"typing\";<br> - files containing input CFGs start with \"untyped\";<br>If files with other names are found, they are put into sub-array \"others\".<br>This array is useful to divide files in Analysis, Input CFGs and Type Inference tab.</p>
                 <br>"; echo "<pre>".print_r($files_dumped_multidim,true)."</pre>";
             echo"
             </div>
@@ -674,19 +684,19 @@ if($status == OK)
 		switch($status)
 		{
 			case NO_DATA:
-				echo "No source code. Please perform an <a href='index.php'>analysis</a> providing source code.";
+				echo "No source code. Please perform an <a href='index.php' title='LiSA Analysis' style='text-decoration: none;'>analysis</a> providing source code.";
 				break;
 
 			case NO_IMP_FILE:
-				echo "The file is not an IMP file. Please perform <a href='index.php'>another analysis</a> inserting an IMP file.";
+				echo "The file is not an <a href='https://unive-ssv.github.io/lisa/imp/' title='IMP documentation' style='text-decoration: none;'>IMP</a> file. Please perform another <a href='index.php' title='LiSA Analysis' style='text-decoration: none;'>analysis</a> inserting an IMP file.";
 				break;
 
 			case ERROR_UPLOAD:
-				echo "an error during upload occured. <a href='index.php'>another analysis</a>.";
+				echo "an error during upload occured. <a href='index.php' title='LiSA Analysis' style='text-decoration: none;'>another analysis</a>.";
 				break;
 
 			case ERROR_INTERNAL:
-				echo "an internal error occured, please contact the sysadmin.";
+				echo "an internal error occured, please <a href='index.php' title='LiSA Analysis' style='text-decoration: none;'>try again</a> and if the error persists contact the sysadmin.";
 		}	?></p>
 		<?php
 	} // else
