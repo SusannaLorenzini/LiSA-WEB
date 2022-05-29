@@ -20,11 +20,15 @@ require_once("init.php");
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<!-- my CSS -->
 	<link rel="stylesheet" href="styles/style.css">
+    <!-- Prism -->
+    <link href="prism/prism-customized-default.css" rel="stylesheet" />
+    <link href="prism/prism-live.css" rel="stylesheet" />
 
     <!-- Javascript events -->
     <script type="text/javascript" src="events.js"></script>
 
-	<title>LiSA, Static Analysis with LiSA</title>
+	<title>LiSA Analysis | Static Analysis with LiSA</title>
+    <link rel="icon" href="media/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -80,7 +84,7 @@ require_once("init.php");
 			<!-- from text area -->
 			<div class="mb-3">
                 <label for="text-area-program" class="form-label">Write your code here</label>
-                <textarea class="form-control" id="text-area-program" name="sourcecode" rows="5" placeholder="Type or copy/paste source code here" onkeydown="if(event.keyCode===9){ const v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"></textarea>
+                <textarea id="text-area-program" class="prism-live language-java line-numbers" name="sourcecode"></textarea>
             </div>
 			<!-- or upload from your computer -->
 			<div class="row mb-3">
@@ -247,6 +251,9 @@ require_once("init.php");
 	<!-- Boostrap -->
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <!-- Prism -->
+    <script src="prism/prism-customized.js"></script>
+    <script src="prism/prism-live.js"></script>
 </body>
 
 </html>
