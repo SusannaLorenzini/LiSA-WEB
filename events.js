@@ -25,16 +25,6 @@ function nicheckChecked() {
 
 
 /* analysis.php */
-// When the element is clicked, show or hide the exception/error output
-function showHideElement() {
-    const show_hide = document.getElementById("exception_error_message");
-    if (show_hide.style.display === "none") {
-        show_hide.style.display = "block";
-    } else {
-        show_hide.style.display = "none";
-    }
-}
-
 // Switch to plain text or back to syntax highlighted text
 function plain_highlighted_sourcecode() {
     const plain_text = document.getElementById("container-plain-sourceraw");
