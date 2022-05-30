@@ -1,5 +1,5 @@
 # LiSA-WEB
-LiSA Analysis is a web application that uses [LiSA](https://github.com/UniVE-SSV/lisa) to perform static analysis.
+LiSA-WEB is LiSA Analysis' web interface, a web application that uses [LiSA](https://github.com/UniVE-SSV/lisa) to perform static analysis.
 
 
 ## Requirements
